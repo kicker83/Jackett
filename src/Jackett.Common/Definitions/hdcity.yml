@@ -129,11 +129,26 @@
 
   search:
     path: index.php
+    keywordsfilters:
+      - name: re_replace
+        args: ["S0?(\\d{1,2})E(\\d{1,2}) S0?(\\d{1,2})E(\\d{1,2})", "$1x$2"]
+      - name: re_replace
+        args: ["S0?(\\d{1,2})E(\\d{1,2})", "$1x$2"]
+      - name: re_replace
+        args: ["á", "a"]
+      - name: re_replace
+        args: ["é", "e"]
+      - name: re_replace
+        args: ["í", "i"]
+      - name: re_replace
+        args: ["ó", "o"]
+      - name: re_replace
+        args: ["ú", "u"]
     inputs:
       page: "torrents"
       $raw: "&category={{range .Categories}}{{.}};{{end}}"
       active: "1"
-      search: "{{ .Query.Keywords }}"
+      search: "{{ .Keywords }}"
     rows:
       selector: "#category+table table tr:not(:first-child):not(:last-child)"
     fields:
@@ -171,12 +186,12 @@
       download:
         selector: a[href^="download.php"]
         attribute: href
-      downloadvolumefactor: 
+      downloadvolumefactor:
         case:
           img[src$="gold.gif"]: "0"
           img[src$="silver.gif"]: "0.5"
           "*": "1"
-      uploadvolumefactor: 
+      uploadvolumefactor:
           case:
             img[src$="2x.gif"]: "2"
             img[src$="3x.gif"]: "3"
